@@ -1,5 +1,5 @@
 diff --git a/plugins/platforms/simplex/adapter.py b/plugins/platforms/simplex/adapter.py
-index 4106683b21..c8306f6ab0 100644
+index 3bf900f093..2256dfc129 100644
 --- a/plugins/platforms/simplex/adapter.py
 +++ b/plugins/platforms/simplex/adapter.py
 @@ -11,6 +11,7 @@ HERMES_SIMPLEX_TEXT_BATCH_DELAY (quiet seconds, default 0.8, merging rapid-fire
@@ -27,7 +27,7 @@ index 4106683b21..c8306f6ab0 100644
  from urllib.parse import unquote
  
  from gateway.platforms._shared import get_scoped_secret as _get_scoped_secret
-@@ -43,6 +50,131 @@ _TEXT_BEARING_TYPES = ("text", "file", "image", "voice", "link", "video")
+@@ -44,6 +51,131 @@ _TEXT_BEARING_TYPES = ("text", "file", "image", "voice", "link", "video")
  _THUMB_URI_PREFIX = "data:image/jpg;base64,"
  _MEDIA_KIND_PRECEDENCE = (("audio/", MessageType.VOICE), ("image/", MessageType.PHOTO))  # first match wins
  
@@ -159,7 +159,7 @@ index 4106683b21..c8306f6ab0 100644
  
  def _parse_comma_list(value: str) -> List[str]:
      return [v.strip() for v in value.split(",") if v.strip()]
-@@ -70,6 +202,46 @@ def _mime_for_ext(ext: str) -> str:
+@@ -71,6 +203,46 @@ def _mime_for_ext(ext: str) -> str:
          return f"audio/{ext.lstrip('.')}"
      return "application/octet-stream"
  
@@ -206,7 +206,7 @@ index 4106683b21..c8306f6ab0 100644
  
  def _display_name(obj: dict, profile_key: str, default: str = "") -> str:
      """``localDisplayName`` falling back to the nested profile's ``displayName``."""
-@@ -125,6 +297,14 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -126,6 +298,14 @@ class SimplexAdapter(BasePlatformAdapter):
          self._text_batch_delay = float(os.getenv("HERMES_SIMPLEX_TEXT_BATCH_DELAY", "0.8"))
          self._pending_text_batches: Dict[str, MessageEvent] = {}
          self._pending_text_batch_tasks: Dict[str, asyncio.Task] = {}
@@ -216,12 +216,12 @@ index 4106683b21..c8306f6ab0 100644
 +        self._call_contact_id = None  # contact id of the active call
 +        self._call_send_track = None  # _CallSendTrack for outbound audio
 +        self._call_audio_task = None  # asyncio task for the audio loop
-+        self._call_shared_key = None  # base64 E2EE key (None = sin cifrado)
++        self._call_shared_key = None  # base64 E2EE key (None = unencrypted)
 +
          logger.info(
              "SimpleX adapter initialized: url=%s auto_accept=%s groups=%s",
              self.ws_url, self.auto_accept, "enabled" if self.group_allow_from else "disabled")
-@@ -230,8 +410,28 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -231,8 +411,28 @@ class SimplexAdapter(BasePlatformAdapter):
              return
          if corr_id and isinstance(corr_id, str) and corr_id.startswith(_CORR_PREFIX):
              self._pending_corr_ids.discard(corr_id)  # our own un-awaited echo
@@ -250,12 +250,12 @@ index 4106683b21..c8306f6ab0 100644
          handler = self._EVENT_HANDLERS.get(resp_type)
          if handler is not None:
              await handler(self, resp)
-@@ -582,6 +782,459 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -583,6 +783,459 @@ class SimplexAdapter(BasePlatformAdapter):
          is_group = chat_id.startswith("group:")
          return {"chat_id": chat_id, "type": "group" if is_group else "dm", "name": chat_id[6:] if is_group else chat_id}
  
 +    # ------------------------------------------------------------------
-+    # Native voice calls — Fase 1 (signaling)
++    # Native voice calls — Phase 1 (signaling)
 +    # ------------------------------------------------------------------
 +
 +    async def _call_handle_invitation(self, resp: dict) -> None:
@@ -427,7 +427,7 @@ index 4106683b21..c8306f6ab0 100644
 +        self._call_contact_id = None
 +
 +    # ------------------------------------------------------------------
-+    # Native voice calls — Fase 2 (audio)
++    # Native voice calls — Phase 2 (audio)
 +    # ------------------------------------------------------------------
 +
 +    async def _call_audio_loop(self, contact_id: str) -> None:
