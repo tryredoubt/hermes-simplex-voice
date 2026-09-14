@@ -1,5 +1,5 @@
 diff --git a/plugins/platforms/simplex/adapter.py b/plugins/platforms/simplex/adapter.py
-index 3bf900f093..2256dfc129 100644
+index be80fb760b..817f3c7a19 100644
 --- a/plugins/platforms/simplex/adapter.py
 +++ b/plugins/platforms/simplex/adapter.py
 @@ -11,6 +11,7 @@ HERMES_SIMPLEX_TEXT_BATCH_DELAY (quiet seconds, default 0.8, merging rapid-fire
@@ -26,8 +26,8 @@ index 3bf900f093..2256dfc129 100644
 +from aiortc.mediastreams import MediaStreamTrack, MediaStreamError
  from urllib.parse import unquote
  
- from gateway.platforms._shared import get_scoped_secret as _get_scoped_secret
-@@ -44,6 +51,131 @@ _TEXT_BEARING_TYPES = ("text", "file", "image", "voice", "link", "video")
+ from gateway.platforms._shared import (
+@@ -47,6 +54,131 @@ _TEXT_BEARING_TYPES = ("text", "file", "image", "voice", "link", "video")
  _THUMB_URI_PREFIX = "data:image/jpg;base64,"
  _MEDIA_KIND_PRECEDENCE = (("audio/", MessageType.VOICE), ("image/", MessageType.PHOTO))  # first match wins
  
@@ -159,7 +159,7 @@ index 3bf900f093..2256dfc129 100644
  
  def _parse_comma_list(value: str) -> List[str]:
      return [v.strip() for v in value.split(",") if v.strip()]
-@@ -71,6 +203,46 @@ def _mime_for_ext(ext: str) -> str:
+@@ -74,6 +206,46 @@ def _mime_for_ext(ext: str) -> str:
          return f"audio/{ext.lstrip('.')}"
      return "application/octet-stream"
  
@@ -206,10 +206,10 @@ index 3bf900f093..2256dfc129 100644
  
  def _display_name(obj: dict, profile_key: str, default: str = "") -> str:
      """``localDisplayName`` falling back to the nested profile's ``displayName``."""
-@@ -126,6 +298,14 @@ class SimplexAdapter(BasePlatformAdapter):
-         self._text_batch_delay = float(os.getenv("HERMES_SIMPLEX_TEXT_BATCH_DELAY", "0.8"))
-         self._pending_text_batches: Dict[str, MessageEvent] = {}
-         self._pending_text_batch_tasks: Dict[str, asyncio.Task] = {}
+@@ -121,6 +293,13 @@ class SimplexAdapter(BasePlatformAdapter):
+         # SimpleX has no client-side split, so the split delay equals the plain one.
+         self._text_batch_delay_seconds = float(os.getenv("HERMES_SIMPLEX_TEXT_BATCH_DELAY", "0.8"))
+         self._text_batch_split_delay_seconds = self._text_batch_delay_seconds
 +
 +        # Native call state (SimpleX native voice calls)
 +        self._call_pc = None          # aiortc RTCPeerConnection
@@ -217,11 +217,10 @@ index 3bf900f093..2256dfc129 100644
 +        self._call_send_track = None  # _CallSendTrack for outbound audio
 +        self._call_audio_task = None  # asyncio task for the audio loop
 +        self._call_shared_key = None  # base64 E2EE key (None = unencrypted)
-+
          logger.info(
              "SimpleX adapter initialized: url=%s auto_accept=%s groups=%s",
              self.ws_url, self.auto_accept, "enabled" if self.group_allow_from else "disabled")
-@@ -231,8 +411,28 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -226,8 +405,28 @@ class SimplexAdapter(BasePlatformAdapter):
              return
          if corr_id and isinstance(corr_id, str) and corr_id.startswith(_CORR_PREFIX):
              self._pending_corr_ids.discard(corr_id)  # our own un-awaited echo
@@ -250,7 +249,7 @@ index 3bf900f093..2256dfc129 100644
          handler = self._EVENT_HANDLERS.get(resp_type)
          if handler is not None:
              await handler(self, resp)
-@@ -583,6 +783,459 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -565,6 +764,459 @@ class SimplexAdapter(BasePlatformAdapter):
          is_group = chat_id.startswith("group:")
          return {"chat_id": chat_id, "type": "group" if is_group else "dm", "name": chat_id[6:] if is_group else chat_id}
  
