@@ -1,5 +1,5 @@
 diff --git a/plugins/platforms/simplex/adapter.py b/plugins/platforms/simplex/adapter.py
-index be80fb760b..817f3c7a19 100644
+index 0dd45bbd17..84e61160f1 100644
 --- a/plugins/platforms/simplex/adapter.py
 +++ b/plugins/platforms/simplex/adapter.py
 @@ -11,6 +11,7 @@ HERMES_SIMPLEX_TEXT_BATCH_DELAY (quiet seconds, default 0.8, merging rapid-fire
@@ -249,7 +249,7 @@ index be80fb760b..817f3c7a19 100644
          handler = self._EVENT_HANDLERS.get(resp_type)
          if handler is not None:
              await handler(self, resp)
-@@ -565,6 +764,459 @@ class SimplexAdapter(BasePlatformAdapter):
+@@ -577,6 +776,459 @@ class SimplexAdapter(BasePlatformAdapter):
          is_group = chat_id.startswith("group:")
          return {"chat_id": chat_id, "type": "group" if is_group else "dm", "name": chat_id[6:] if is_group else chat_id}
  
