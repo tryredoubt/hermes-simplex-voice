@@ -1,5 +1,5 @@
 diff --git a/plugins/platforms/simplex/adapter.py b/plugins/platforms/simplex/adapter.py
-index 53e671be02..bf49e08a2c 100644
+index af93f0661f..c2532827f5 100644
 --- a/plugins/platforms/simplex/adapter.py
 +++ b/plugins/platforms/simplex/adapter.py
 @@ -11,6 +11,7 @@ HERMES_SIMPLEX_TEXT_BATCH_DELAY (quiet seconds, default 0.8, merging rapid-fire
@@ -157,7 +157,7 @@ index 53e671be02..bf49e08a2c 100644
 +        )
 +        return False
  
- def _parse_comma_list(value: str) -> List[str]:
+ def _parse_comma_list(value: str) -> list[str]:
      return [v.strip() for v in value.split(",") if v.strip()]
 @@ -99,6 +231,46 @@ def _mime_for_ext(ext: str) -> str:
          return f"audio/{ext.lstrip('.')}"
@@ -709,3 +709,16 @@ index 53e671be02..bf49e08a2c 100644
  
  def check_requirements() -> bool:
      """Plugin gate: require SIMPLEX_WS_URL AND the websockets package."""
+diff --git a/plugins/platforms/simplex/plugin.yaml b/plugins/platforms/simplex/plugin.yaml
+index 84ef401a66..2c6070da6c 100644
+--- a/plugins/platforms/simplex/plugin.yaml
++++ b/plugins/platforms/simplex/plugin.yaml
+@@ -13,6 +13,8 @@ author: Mibayy, jooray
+ # ``requires_env`` and ``optional_env`` entries are surfaced in the
+ # ``hermes config`` UI via the platform-plugin env var injector in
+ # ``hermes_cli/config.py``.
++python_dependencies:
++  - "aiortc>=1.5,<2"
+ requires_env:
+   - name: SIMPLEX_WS_URL
+     description: "WebSocket URL of the simplex-chat daemon (e.g. ws://127.0.0.1:5225)"
