@@ -1,5 +1,5 @@
 diff --git a/plugins/platforms/simplex/adapter.py b/plugins/platforms/simplex/adapter.py
-index af93f0661f..c2532827f5 100644
+index 4591bdc429..1c704b6e86 100644
 --- a/plugins/platforms/simplex/adapter.py
 +++ b/plugins/platforms/simplex/adapter.py
 @@ -11,6 +11,7 @@ HERMES_SIMPLEX_TEXT_BATCH_DELAY (quiet seconds, default 0.8, merging rapid-fire
@@ -15,7 +15,7 @@ index af93f0661f..c2532827f5 100644
  import re
  import time
 +import wave
- from datetime import datetime, timezone
+ from datetime import datetime, timezone, UTC
 +from fractions import Fraction
  from pathlib import Path
  from typing import Any, Dict, List, Optional
