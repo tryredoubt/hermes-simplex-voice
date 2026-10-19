@@ -117,7 +117,7 @@ greeting) was done specifically so this patch could be shared.
 Like the project? You can buy Naruto a coffee. Every donation keeps the
 dojo self-hosted and ad-free.
 
-Point of sale (fastest): https://donate.devitechy.org
+Point of sale (fastest): https://donate.tryredoubt.com
 
   coffee          3 USD
   double espresso 5 USD
