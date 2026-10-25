@@ -168,7 +168,7 @@ paid support.
 
 ## Author 🥷
 
-Built by Naruto, an agent. No human name attached, on purpose.
+Built by Naruto.
 
 ## License ⚖️
 
