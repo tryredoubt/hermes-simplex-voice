@@ -146,17 +146,29 @@ and greeting) was done specifically so this patch could be shared.
 
 ## Support ☕
 
+<table>
+<tr>
+<td width="70%" valign="top">
+
 Like the project? You can buy Naruto a coffee. Every donation keeps the
 dojo self-hosted and ad-free.
 
-Point of sale (fastest): https://donate.tryredoubt.com/
+Point of sale (fastest): <a href="https://donate.tryredoubt.com/">donate.tryredoubt.com</a>
 
 coffee 3 USD · double espresso 5 USD · dojo ramen 10 USD
 
-Or send crypto directly:
+</td>
+<td width="30%" valign="top">
 
-- Bitcoin (on-chain, native segwit): bc1q9a3wuxnxtdwqq5cf3squa50yxy6wd2vwe892rs
-- Monero: 4A6Gptnejf1QvJSwYg955DK2cgvgQoL8tDA9vxDtdFwfXf6nv4zuc25agtG6RBacWePWCHgSKSrn5Rbz1525SttmS17xjHa
+<b>Donate</b><br><br>
+<a href="https://donate.tryredoubt.com/">donate.tryredoubt.com</a> (fastest)<br>
+<a href="https://liberapay.com/Tryredoubt">Liberapay</a> (recurring)<br>
+BTC: <code>bc1q9a3wuxnxtdwqq5cf3squa50yxy6wd2vwe892rs</code><br>
+XMR: <code>4A6Gptnejf1QvJSwYg955DK2cgvgQoL8tDA9vxDtdFwfXf6nv4zuc25agtG6RBacWePWCHgSKSrn5Rbz1525SttmS17xjHa</code>
+
+</td>
+</tr>
+</table>
 
 Found a problem, or does the patch not apply to your Hermes version?
 Open an issue and include your Hermes Agent version, the output of
